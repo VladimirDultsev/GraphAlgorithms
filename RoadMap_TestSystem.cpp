@@ -11,11 +11,10 @@
 #include <mutex>
 #include <functional>
 #include <random>
-#include "json.hpp"
-#include "rapidjson-master/include/rapidjson/document.h"
-#include "rapidjson-master/include/rapidjson/writer.h"
-#include "rapidjson-master/include/rapidjson/stringbuffer.h"
-#include "rapidjson-master/include/rapidjson/istreamwrapper.h"
+#include "rapidjson/include/rapidjson/document.h"
+#include "rapidjson/include/rapidjson/writer.h"
+#include "rapidjson/include/rapidjson/stringbuffer.h"
+#include "rapidjson/include/rapidjson/istreamwrapper.h"
 
 /// Структура хеширования пар для хранения пар плоскостей
 struct pair_hash {
@@ -28,7 +27,6 @@ struct pair_hash {
 };
 
 using namespace std;
-using json = nlohmann::json;
 map<double, unordered_set<unsigned long long int>> dict[2];
 unordered_map<unsigned long long int, tuple<double, double, unsigned long long int, bool>>pars[2];//эвристика, minDist (чистое расстояние без эвристики), родитель
 unordered_map<unsigned long long int, unsigned long long int> pars1;//родитель
@@ -52,6 +50,7 @@ bool isDejkstra;
 #define RADIO_TERRESTRE 6372797.56085
 #define GRADOS_RADIANES PI / 180
 #define RADIANES_GRADOS 180 / PI
+// Функция подсчёта расстояния по гаверсинусной формуле
 double calcGPSDistance(double longitude_new, double latitude_new, double longitude_old, double latitude_old)
 {
     double  lat_new = latitude_old * GRADOS_RADIANES;
@@ -70,23 +69,27 @@ double calcGPSDistance(double longitude_new, double latitude_new, double longitu
 
     return abs(distance);
 }
+// Эвристическая функция для 2A*
 double Heuristic(unsigned long long int point, int AStarIndex)
 {
+    // В текущей версии Двухпоточный алгоритм Дейкстры и 2Дейкстра - это Двухпоточный A* и 2A*, но эвристическая функция возвращает 0
     if(isDejkstra){
         return 0;
     }
-    if(AStarIndex){// Если нас вызывает обратный A*
+    if(AStarIndex){// Если нас вызывает обратный A*, возвращаем расстояние от текущей точки до старта
         return calcGPSDistance(points[start].first, points[start].second, points[point].first, points[point].second);
-    }else{
-        return calcGPSDistance(points[finish].first, points[finish].second, points[point].first, points[point].second);
     }
+    // Если нас вызывает прямой A*, возвращаем расстояние от текущей точки до финиша
+    return calcGPSDistance(points[finish].first, points[finish].second, points[point].first, points[point].second);
 }
+/// Многопоточная модификация A*
 void ModifiedAStar(int AStarIndex)
 {
     unsigned long long int point = 0;
     double finalDist, oldDist, heuristic, newNeighbourDist;
     unordered_set<unsigned long long int> EmptySet;
-    unsigned short useless;
+
+    // Добавляем информацию о стартовой вершине
     if(!AStarIndex){
         pars[AStarIndex][start] = make_tuple(Heuristic(start, AStarIndex), 0, start, false);
         dict[AStarIndex][get<0>(pars[AStarIndex][start])].insert(start);
@@ -94,9 +97,12 @@ void ModifiedAStar(int AStarIndex)
         pars[AStarIndex][finish] = make_tuple(Heuristic(finish, AStarIndex), 0, finish, false);
         dict[AStarIndex][get<0>(pars[AStarIndex][finish])].insert(finish);
     }
+
     while (!dict[AStarIndex].empty() && !needToFinish)
     {
         point = *((dict[AStarIndex].begin())->second).begin();
+        // Чтобы проверить не обработана ли данная точка противонаправленным
+        // алгоритмом, нужен mutex, так как структура данных used используется в двух потоках
         mtx.lock();
         if ((!AStarIndex && point == finish) || (AStarIndex && point == start) || used.count(point)) {
             buffPoint = point;
@@ -107,6 +113,7 @@ void ModifiedAStar(int AStarIndex)
         }
         used.insert(point);
         mtx.unlock();
+
         for (unsigned long long int neighbour : adjList[point])// Перебираем соседей точки
         {
             newNeighbourDist = get<1>(pars[AStarIndex][point]) + // Расстояние, за которое мы дошли до этого соседа (сумма расстояния за которое мы дошли до нас + расстояние до соседа)
@@ -138,35 +145,36 @@ void ModifiedAStar(int AStarIndex)
             dict[AStarIndex].erase(oldDist);// Удаляем этот ключ из словаря
         }
     }
-//    vector<unsigned long long int> lst;
-//    for (unsigned long long int i = point; i != start; i = get<2>(pars[0][i]))
-//    {
-//        lst.push_back(i);
-//    }
-//    reverse(lst.begin(), lst.end());
+    // Восстановление пути, но в многопточной модификации A* путь восстанавливается в функции, запускающей потоки
+    // vector<unsigned long long int> lst;
+    // for (unsigned long long int i = point; i != start; i = get<2>(pars[0][i]))
+    // {
+    //     lst.push_back(i);
+    // }
+    // reverse(lst.begin(), lst.end());
     //lst.push_back(Field);
-    /*
-    for(int i = 0; i < lst.size(); ++i)
-    {
-        printField(lst[i]);
-    }*/
+    // for(int i = 0; i < lst.size(); ++i)
+    // {
+    //     printField(lst[i]);
+    // }
     //return lst;
 }
+/// A*
 vector<unsigned long long int> AStar()
 {
-    int AStarIndex = 0;
+    int AStarIndex = 0;// Так как этот A* однонаправленный, чётко фиксируем его индекс и не будем его менять в процессе работы
     unsigned long long int point = 0;
     double finalDist, oldDist, heuristic, newNeighbourDist;
     unordered_set<unsigned long long int> EmptySet;
-    unsigned short useless;
+
     pars[AStarIndex].clear();
     dict[AStarIndex].clear();
-    pars[AStarIndex][start] = make_tuple(Heuristic(start, AStarIndex), 0, start, false);
-    dict[AStarIndex][get<0>(pars[0][start])].insert(start);
-    while (!dict[AStarIndex].empty())
+    pars[AStarIndex][start] = make_tuple(Heuristic(start, AStarIndex), 0, start, false);// Добавляем информацию о стартовой вершине
+    dict[AStarIndex][get<0>(pars[0][start])].insert(start);// Добавляем старт в словарь
+    while (!dict[AStarIndex].empty())// Алгоритм работает пока в словаре есть точки
     {
-        point = *((dict[AStarIndex].begin())->second).begin();
-        if (point == finish)
+        point = *((dict[AStarIndex].begin())->second).begin();// Текущая точка - случайная из наименьших по расстоянию точек словаря
+        if (point == finish)// Дошли до финиша - завершаемся
         {
             //cout << "solved\n";
             break;
@@ -202,8 +210,9 @@ vector<unsigned long long int> AStar()
             dict[AStarIndex].erase(oldDist);// Удаляем этот ключ из словаря
         }
     }
+    // Восстановление пути
     vector<unsigned long long int> lst;
-    for (unsigned long long int i = point; i != start; i = get<2>(pars[AStarIndex][i]))
+    for (unsigned long long int i = point; i != start; i = get<2>(pars[AStarIndex][i]))// Прыгаем по родителям точки, пока не дойдём до старта
     {
         lst.push_back(i);
     }
@@ -211,34 +220,38 @@ vector<unsigned long long int> AStar()
     reverse(lst.begin(), lst.end());
     return lst;
 }
+/// 2A*
 vector<unsigned long long int> DoubleAStar()
 {
     int AStarIndex = 0;
     unsigned long long int point = 0;
     double finalDist, oldDist, heuristic, newNeighbourDist;
     unordered_set<unsigned long long int> EmptySet;
+
     pars[0].clear();
     pars[1].clear();
     dict[0].clear();
     dict[1].clear();
-    pars[0][start] = make_tuple(Heuristic(start, 0), 0, start, false);
+
+    pars[0][start] = make_tuple(Heuristic(start, 0), 0, start, false);// Добавляем информацию о стартовой вершине для прямого обхода
     dict[0][get<0>(pars[0][start])].insert(start);// Добавляем старт в словарь прямого A*-а под приоритетом в виде только эвристики, потому что расстояние от старта до старта 0
-    pars[1][finish] = make_tuple(Heuristic(finish, 1), 0, finish, false);
+    pars[1][finish] = make_tuple(Heuristic(finish, 1), 0, finish, false);// Добавляем информацию о стартовой вершине для обратного обхода (в реальности это точка финиша)
     dict[1][get<0>(pars[1][finish]) + get<1>(pars[1][finish])].insert(finish);// Добавляем финиш в словарь обратного A*-а под приоритетом в виде только эвристики, потому что расстояние от финиша до финиша 0
     while (!dict[0].empty() || !dict[1].empty())// Алгоритм работает пока хоть в одном из словарей есть точки
     {
         if (!dict[0].empty() && !dict[1].empty()) {// Если в обоих словарях есть точки
             AStarIndex = (dict[0].begin()->first < dict[1].begin()->first) ? 0 : 1;// Берем точку из того словаря, где приоритет меньше
-            point = *(dict[AStarIndex].begin()->second.begin());
+            point = *(dict[AStarIndex].begin()->second.begin());//Текущая точка - случайная из наименьших по расстоянию точек выбранного словаря
         }
         else if (!dict[0].empty()) {// Если словарь обратного A*-а пустой
             AStarIndex = 0;// Берем точку из словаря прямого A*-а
-            point = *(dict[0].begin()->second.begin());
+            point = *(dict[0].begin()->second.begin());// Текущая точка - случайная из наименьших по расстоянию точек словаря
         }
         else {// Если словарь прямого A*-а пустой
             AStarIndex = 1;// Берем точку из словаря обратного A*-а
-            point = *(dict[1].begin()->second.begin());
+            point = *(dict[1].begin()->second.begin());// Текущая точка - случайная из наименьших по расстоянию точек словаря
         }
+
         if (pars[1 - AStarIndex].count(point) && get<3>(pars[1 - AStarIndex][point])) {// Если точка уже удалена из другого словаря, значит A*-ы соединились
             break;// Прекращаем работу
         }
@@ -273,78 +286,86 @@ vector<unsigned long long int> DoubleAStar()
             dict[AStarIndex].erase(oldDist);// Удаляем этот ключ из словаря
         }
     }
+    //Восстановление пути
     vector<unsigned long long int> path;
     for(unsigned long long int pt = point; pt != start; pt = get<2>(pars[0][pt])){// Прыгаем по соседям из pars прямого A*-а пока не дойдем до старта
         path.push_back(pt);
     }
     path.push_back(start);// Добавляем старт в путь
     reverse(path.begin(), path.end());// Переворачиваем путь, потому что мы шли в обратном порядке
-    for(unsigned long long int pt = get<2>(pars[1][point]); pt != finish; pt = get<2>(pars[1][pt])){// Прыгаем по соседям из pars обратного A*-а пока не дойдем до старта
+    for(unsigned long long int pt = get<2>(pars[1][point]); pt != finish; pt = get<2>(pars[1][pt])){// Прыгаем по соседям из pars обратного A*-а пока не дойдем до финиша
         path.push_back(pt);
     }
     path.push_back(finish);// Добавляем финиш в путь
     return path;
 }
+/// Алгоритм Дейкстры
 vector<unsigned long long int> Dejkstra(){
     vector<double> m_dist(adjList.size(), numeric_limits<double>::max());
     map<double, unordered_set<unsigned long long int>> dict1;
     dict1[0].insert(start);
-    m_dist[start] = 0;
-    unsigned long long int curr;
-    double currDist;
-    while(!dict1.empty()){
-        currDist = dict1.begin()->first;
+    m_dist[start] = 0;// Массив, в котором для каждой вершины хранится наименьшее расстояние, за которое мы смогли дойти до неё
+    unsigned long long int curr;// Рассматриваемая вершина
+    double currDist;// Расстояние, вершины на котором мы сейчас рассматриваем
+    while(!dict1.empty()){// Пока в словаре есть точки
+        currDist = dict1.begin()->first;// Расстояние, вершины на котором мы сейчас рассматриваем - это наименьшее расстояние, присутствующее в словаре
         curr = *dict1.begin()->second.begin();
-        if(curr == finish){
+        if(curr == finish){// Если вершина, которую мы достали - это финиш, завершаемся
             //cout << "solved\n";
             break;
         }
-        for(unsigned long long int neighbour: adjList[curr]){
-            if(m_dist[neighbour] == numeric_limits<double>::max()){
+        for(unsigned long long int neighbour: adjList[curr]){// Перебираем соседей точки
+            if(m_dist[neighbour] == numeric_limits<double>::max()){// Если мы впервые встречаем данную вершину, то обязательно добавляем её
+                // Расстояние до неё - это минимальное расстояние, за которое мы дошли до данной вершины + длина ребра до неё
                 m_dist[neighbour] = m_dist[curr] + calcGPSDistance(points[curr].first, points[curr].second, points[neighbour].first, points[neighbour].second);
-                dict1[m_dist[neighbour]].insert(neighbour);
-                pars1[neighbour] = curr;
+                dict1[m_dist[neighbour]].insert(neighbour);// Добавляем точку в словарь под приоритетом в виде расстояния, за которое мы дошли до неё
+                pars1[neighbour] = curr;// Теперь наша вершина - родитель найденной нами вершины
             }
+            // Если мы уже встречали эту вершину, но дошли до неё за меньшее расстояние, чем раньше
             else if(m_dist[curr] + calcGPSDistance(points[curr].first, points[curr].second, points[neighbour].first, points[neighbour].second) < m_dist[neighbour]){
-                dict1[m_dist[neighbour]].erase(neighbour);
-                if(dict1[m_dist[neighbour]].empty()){
+                dict1[m_dist[neighbour]].erase(neighbour);// Удаляем эту вершину из словаря под старым приоритетом
+                if(dict1[m_dist[neighbour]].empty()){// Если точек на таком расстоянии больше нет, удаляем этот ключ из словаря
                     dict1.erase(m_dist[neighbour]);
                 }
+                // Новое расстояние до этой вершины - это минимальное расстояние, за которое мы дошли до данной вершины + длина ребра до неё
                 m_dist[neighbour] = m_dist[curr] + calcGPSDistance(points[curr].first, points[curr].second, points[neighbour].first, points[neighbour].second);
-                dict1[m_dist[neighbour]].insert(neighbour);
-                pars1[neighbour] = curr;
+                dict1[m_dist[neighbour]].insert(neighbour);// Добавляем точку в словарь под приоритетом в виде расстояния, за которое мы дошли до неё
+                pars1[neighbour] = curr;// Теперь наша вершина - родитель найденной нами вершины
             }
         }
-        dict1[currDist].erase(curr);
-        if(dict1[currDist].empty()){
+        dict1[currDist].erase(curr);// Удаляем текущую точку из словаря, так ка мы её уже рассмотрели
+        if(dict1[currDist].empty()){// Если точек на таком расстоянии больше нет, удаляем этот ключ из словаря
             dict1.erase(currDist);
         }
     }
+    // Восстановление пути
     vector<unsigned long long int> path;
-    for (unsigned long long int i = curr; i != start; i = pars1[i])
+    for (unsigned long long int i = curr; i != start; i = pars1[i])// Прыгаем по родителям, пока не дойдём до старта
     {
         path.push_back(i);
     }
-    path.push_back(start);
-    reverse(path.begin(), path.end());
+    path.push_back(start);// Добавляем старт в путь
+    reverse(path.begin(), path.end());// Переворачиваем полученный массив, потому что мы шли в обратном порядке
     return path;
 }
 vector<unsigned long long int> MultithreadDoubleAStar(){
 //    used.clear();
 //    needToFinish = false;
-
+    // Запускаем два потока с прямым и обратным обходами
     thread ModifiedAStar1(ModifiedAStar, 0);
     thread ModifiedAStar2(ModifiedAStar, 1);
     {
         std::unique_lock<std::mutex> lk(cv_mtx);
         cv.wait(lk, []{ return needToFinish.load(); });
     }
+    // Ждём завершения потоков
     if(ModifiedAStar1.joinable()){
         ModifiedAStar1.join();
     }
     if(ModifiedAStar2.joinable()){
         ModifiedAStar2.join();
     }
+
     vector<unsigned long long int> path;
     for(unsigned long long int pt = buffPoint; pt != start; pt = get<2>(pars[0][pt])){// Прыгаем по соседям из pars прямого A*-а пока не дойдем до старта
         path.push_back(pt);
@@ -358,6 +379,7 @@ vector<unsigned long long int> MultithreadDoubleAStar(){
     return path;
 }
 using namespace rapidjson;
+/// Функция построения графа из JSON-документа
 void buildGraph(Document& data, unordered_map<pair<double, double>, unordered_set<pair<double, double>, pair_hash>, pair_hash>& adj) {
     if (!data.HasMember("features") || !data["features"].IsArray()) {
         std::cerr << "Invalid JSON structure: missing features array" << std::endl;
@@ -386,6 +408,8 @@ void buildGraph(Document& data, unordered_map<pair<double, double>, unordered_se
         }
     }
 }
+
+/// Преобразуем массив path в формат GeoJSON
 string pathToJson(std::vector<unsigned long long int>& path) {
     Document jsonPath(kObjectType);
     auto& allocator = jsonPath.GetAllocator();
@@ -416,6 +440,8 @@ string pathToJson(std::vector<unsigned long long int>& path) {
     jsonPath.Accept(writer);
     return buffer.GetString();
 }
+
+/// Функция, задающая номера точкам
 void codePoints(){
     unsigned long long int cnt = 0;
     for(auto pr: adjListCoords){
@@ -430,9 +456,11 @@ void codePoints(){
         }
     }
 }
+
+/// Линейный поиск ближайшей точки графа к данной точке
 unsigned long long int linearFindNearestPoint(double latitude, double longitude){
     double minDist = numeric_limits<double>::max();
-    unsigned long long int nearestPoint;
+    unsigned long long int nearestPoint = 0;
     for(auto point: points){
         if(calcGPSDistance(latitude, longitude, point.second.second, point.second.first) < minDist){
             minDist = calcGPSDistance(latitude, longitude, point.second.second, point.second.first);
@@ -441,6 +469,8 @@ unsigned long long int linearFindNearestPoint(double latitude, double longitude)
     }
     return nearestPoint;
 }
+
+/// Функция, определяющая суммарную длину пути
 double getLength(vector<unsigned long long int>& path){
     double sum = 0;
     for(int i = 1; i < path.size(); ++i){
@@ -448,10 +478,13 @@ double getLength(vector<unsigned long long int>& path){
     }
     return sum;
 }
+
 bool isFirstItem;
+/// Функция сранения пар по первому элементу
 bool comparePairsFst(const pair<double, double>& a, const pair<double, double>& b){
     return a.first < b.first;
 }
+/// Функция сранения пар по второму элементу
 bool comparePairsSnd(const pair<double, double>& a, const pair<double, double>& b){
     return a.second < b.second;
 }
@@ -461,8 +494,10 @@ struct pairsComparator {
         return a.second < b.second;
     }
 };
+
 map<double, vector<pair<double, double>>> splitTresholds;
 map<double, map<double, vector<pair<double, double>>>> res;
+/// Быстрая функция поиска ближайшей точки графа, основанная на сегментировании графа
 unsigned long long int findNearestPoint(double longitude, double latitude){
     double minDist = numeric_limits<double>::max();
     pair<double, double> nearestPoint;
@@ -517,6 +552,8 @@ unsigned long long int findNearestPoint(double longitude, double latitude){
     }
     return Indices[nearestPoint];
 }
+
+/// Функция, сегментирующая граф
 void splitGraph(int sideSize){
     sort(pts.begin(), pts.end(), comparePairsFst);
     int elementsInContainer = pts.size() / sqrt(sideSize);
@@ -558,6 +595,8 @@ void splitGraph(int sideSize){
         res[pr.first] = {dict};
     }
 }
+
+/// Функция, выводящая количество точек с данным количеством соседей (с помощью неё можно оценить связность графа)
 void printConnectivity(){
     vector<int> sums(30);
     for(auto pair:adjList){
@@ -568,6 +607,8 @@ void printConnectivity(){
         cout << cnt << '\n';
     }
 }
+
+/// Считает минимальные и максимальные координаты точек графа
 void scan(){
     double minFst = numeric_limits<double>::max();
     double maxFst = numeric_limits<double>::min();
@@ -589,6 +630,7 @@ void scan(){
     }
     cout<<endl;
 }
+/// Класс для генерации случайных чисел с плавающей точкой
 class Rand_double
 {
 public:
@@ -605,8 +647,10 @@ public:
 private:
     std::function<double()> r;
 };
+
 Rand_double rdFst{55.55, 55.90};  // Широта Москвы
 Rand_double rdSnd{37.30, 37.85};  // Долгота Москвы
+//// Генератор точек на заданном расстоянии (distance) с погрешностью threshold
 pair<unsigned long long int, unsigned long long int> generatePoints(double distance, double threshold){
     pair<double, double> p1 = make_pair(rdFst(), rdSnd());
     pair<double, double> p2 = make_pair(rdFst(), rdSnd());
@@ -619,6 +663,7 @@ pair<unsigned long long int, unsigned long long int> generatePoints(double dista
     }
     return make_pair(linearFindNearestPoint(p1.first, p1.second), linearFindNearestPoint(p2.first, p2.second));
 }
+/// Тестирующая система для алгоритмов
 void Test(int amountOfStages, int threshold, int testsInStage, int step){
     pair<unsigned long long int, unsigned long long int> buff;
     unsigned long long int p1, p2;
@@ -635,7 +680,7 @@ void Test(int amountOfStages, int threshold, int testsInStage, int step){
             for(int algorithm = 0; algorithm < algorithms.size(); ++algorithm){
                 cout << "Distance: " << dist << " Test: " << y + 1 << " Algorithm: " << names[algorithm] << '\n';
                 isDejkstra = false;
-                if(algorithm == 4 || algorithm == 5){
+                if(algorithm == 4 || algorithm == 5){// Если это 2Дейкстра или Multithread Дейкстра, зануляем эвристику
                     isDejkstra = true;
                 }
                 pars[0].clear();
@@ -645,12 +690,13 @@ void Test(int amountOfStages, int threshold, int testsInStage, int step){
                 pars1.clear();
                 used.clear();
                 needToFinish = false;
-                time = clock();
-                algorithms[algorithm]();
-                Res[algorithm][dist] += clock() - time;
+                time = clock();// Начинаем замер времени
+                algorithms[algorithm]();// Запускаем алгоритм
+                Res[algorithm][dist] += clock() - time;// Фиксируем результат
             }
         }
     }
+    // Выводим результаты тестирования
     cout << "Testing finished\n";
     for(int algorithm = 0; algorithm < algorithms.size(); ++algorithm){
         cout << names[algorithm] << ":\n";
