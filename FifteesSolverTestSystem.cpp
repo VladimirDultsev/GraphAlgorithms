@@ -104,19 +104,19 @@ public:
         }
         if (zeroPos - 4 > 0)
         {
-            Longs.push_back(pair(swap(f, zeroPos - 4, zeroPos), zeroPos - 4));
+            Longs.push_back({swap(f, zeroPos - 4, zeroPos), zeroPos - 4});
         }
         if (zeroPos + 4 <= 15)
         {
-            Longs.push_back(pair(swap(f, zeroPos + 4, zeroPos), zeroPos + 4));
+            Longs.push_back({swap(f, zeroPos + 4, zeroPos), zeroPos + 4});
         }
         if (zeroPos != 0 && zeroPos != 4 && zeroPos != 8 && zeroPos != 12)
         {
-            Longs.push_back(pair(swap(f, zeroPos - 1, zeroPos), zeroPos - 1));
+            Longs.push_back({swap(f, zeroPos - 1, zeroPos), zeroPos - 1});
         }
         if (zeroPos != 3 && zeroPos != 7 && zeroPos != 11 && zeroPos != 15)
         {
-            Longs.push_back(pair(swap(f, zeroPos + 1, zeroPos), zeroPos + 1));
+            Longs.push_back({swap(f, zeroPos + 1, zeroPos), zeroPos + 1});
         }
     }
     double SmartHeuristic(unsigned long long int f)
@@ -783,148 +783,149 @@ vector<vector<unsigned short>> Multithread_2BFS(vector<unsigned short>& st)
 
     return path;
 }
-// void ModifiedAStar(int AStarIndex) {
-//     double finalDist, oldDist, heuristic, newNeighbourDist;
-//     unsigned long long int n_dist, point = 0, start;
-//     unordered_map<unsigned long long int, tuple<double, unsigned long long int, unsigned long long int>> pars;
-//     map<unsigned long long int, unordered_set<unsigned long long int>> dict;
-//     unordered_set<unsigned long long int> localUsed;
-//     longToField(stPos);
-//     calcPurposes(Field);
-//     if (!AStarIndex) {
-//         start = stPos;
-//     } else {
-//         start = finish;
-//     }
-//     pars[start] = make_tuple(DoubleAStarHeuristic2(start, AStarIndex), 0, start);
-//     dict[get<0>(pars[start]) + get<1>(pars[start])].insert(start);
-//     while (!dict.empty() && !needToFinish && !error) {
-//         if (clock() - Start > threshold) {
-//             lock_guard<mutex> lock(mtx);
-//             needToFinish = true;
-//             error = true;
-//             cv.notify_all();
-//             cout << "Time limit error!\n";
-//             break;
-//         }
-//         point = *((dict.begin())->second).begin();
-//         if (point == 0)
-//         {
-//             cout << endl;
-//         }
-//         {
-//             lock_guard lock(mtx);
-//             // if ((used.count(point) && localUsed.count(point)))
-//             // {
-//             //     cout<<endl;
-//             // }
-//             if ((!AStarIndex && point == finish) ||(AStarIndex && point == stPos) || (used.count(point) && !localUsed.count(point))) {
-//                 buffPoint = point;
-//                 needToFinish = true;
-//                 cv.notify_all();
-//                 break;
-//             }
-//             localUsed.insert(point);
-//             used.insert(point);
-//         }
-//         for (unsigned long long int neighbour : CalcVariants(point)) {
-//             if (neighbour == 0)
-//             {
-//                 cout << endl;
-//             }
-//             newNeighbourDist = get<1>(pars[point]) + 1;
-//             if (!pars.count(neighbour)) {
-//                 heuristic = DoubleAStarHeuristic2(neighbour, AStarIndex);
-//                 pars[neighbour] = make_tuple(heuristic, newNeighbourDist, point);
-//                 finalDist = newNeighbourDist + heuristic;
-//                 dict[finalDist].insert(neighbour);
-//             } else if (newNeighbourDist < get<1>(pars[neighbour])) {
-//                 oldDist = get<0>(pars[neighbour]) + get<1>(pars[neighbour]);
-//                 if (dict.count(oldDist)) {
-//                     dict[oldDist].erase(neighbour);
-//                     if (dict[oldDist].empty()) {
-//                         dict.erase(oldDist);
-//                     }
-//                 }
-//                 get<1>(pars[neighbour]) = newNeighbourDist;
-//                 get<2>(pars[neighbour]) = point;
-//                 finalDist = newNeighbourDist + get<0>(pars[neighbour]);
-//                 dict[finalDist].insert(neighbour);
-//             }
-//         }
-//         pars[point] = make_tuple(get<0>(pars[point]), get<1>(pars[point]), get<2>(pars[point]));
-//         n_dist = get<1>(pars[point]) + get<0>(pars[point]);
-//         if (dict.count(n_dist)) {
-//             dict[n_dist].erase(point);
-//             if (dict[n_dist].empty()) {
-//                 dict.erase(n_dist);
-//             }
-//         }
-//     }
-//     if (error) {
-//         return;
-//     }
-//     if (!AStarIndex) {
-//         vector<unsigned long long int> tempPath;
-//         for (unsigned long long int pt = get<2>(pars[buffPoint]); pt != stPos; pt = get<2>(pars[pt])) {
-//             tempPath.push_back(pt);
-//         }
-//         tempPath.push_back(stPos);
-//         reverse(tempPath.begin(), tempPath.end());
-//         for (auto pt : tempPath) {
-//             longToField(pt);
-//             fstPart.push_back(Field);
-//         }
-//     } else {
-//         vector<unsigned long long int> tempPath;
-//         for (unsigned long long int pt = get<2>(pars[buffPoint]); pt != finish; pt = get<2>(pars[pt])) {
-//             tempPath.push_back(pt);
-//         }
-//         tempPath.push_back(finish);
-//         for (auto pt : tempPath) {
-//             longToField(pt);
-//             sndPart.push_back(Field);
-//         }
-//     }
-// }
+void ModifiedAStar(int AStarIndex) {
+    double finalDist, oldDist, heuristic, newNeighbourDist;
+    unsigned long long int n_dist, point = 0, start;
+    unordered_map<unsigned long long int, tuple<double, unsigned long long int, unsigned long long int>> pars;
+    map<unsigned long long int, unordered_set<unsigned long long int>> dict;
+    unordered_set<unsigned long long int> localUsed;
+    longToField(stPos);
+    calcPurposes(Field);
+    if (!AStarIndex) {
+        start = stPos;
+    } else {
+        start = finish;
+    }
+    pars[start] = make_tuple(DoubleAStarHeuristic2(start, AStarIndex), 0, start);
+    dict[get<0>(pars[start]) + get<1>(pars[start])].insert(start);
+    while (!dict.empty() && !needToFinish && !error) {
+        if (clock() - Start > threshold) {
+            lock_guard<mutex> lock(mtx);
+            needToFinish = true;
+            error = true;
+            cv.notify_all();
+            cout << "Time limit error!\n";
+            break;
+        }
+        point = *((dict.begin())->second).begin();
+        if (point == 0)
+        {
+            cout << endl;
+        }
+        {
+            mtx.lock();
+            // if ((used.count(point) && localUsed.count(point)))
+            // {
+            //     cout<<endl;
+            // }
+            if ((!AStarIndex && point == finish) ||(AStarIndex && point == stPos) || (used.count(point) && !localUsed.count(point))) {
+                buffPoint = point;
+                needToFinish = true;
+                cv.notify_all();
+                break;
+            }
+            localUsed.insert(point);
+            used.insert(point);
+            mtx.unlock();
+        }
+        for (unsigned long long int neighbour : CalcVariants(point)) {
+            if (neighbour == 0)
+            {
+                cout << endl;
+            }
+            newNeighbourDist = get<1>(pars[point]) + 1;
+            if (!pars.count(neighbour)) {
+                heuristic = DoubleAStarHeuristic2(neighbour, AStarIndex);
+                pars[neighbour] = make_tuple(heuristic, newNeighbourDist, point);
+                finalDist = newNeighbourDist + heuristic;
+                dict[finalDist].insert(neighbour);
+            } else if (newNeighbourDist < get<1>(pars[neighbour])) {
+                oldDist = get<0>(pars[neighbour]) + get<1>(pars[neighbour]);
+                if (dict.count(oldDist)) {
+                    dict[oldDist].erase(neighbour);
+                    if (dict[oldDist].empty()) {
+                        dict.erase(oldDist);
+                    }
+                }
+                get<1>(pars[neighbour]) = newNeighbourDist;
+                get<2>(pars[neighbour]) = point;
+                finalDist = newNeighbourDist + get<0>(pars[neighbour]);
+                dict[finalDist].insert(neighbour);
+            }
+        }
+        pars[point] = make_tuple(get<0>(pars[point]), get<1>(pars[point]), get<2>(pars[point]));
+        n_dist = get<1>(pars[point]) + get<0>(pars[point]);
+        if (dict.count(n_dist)) {
+            dict[n_dist].erase(point);
+            if (dict[n_dist].empty()) {
+                dict.erase(n_dist);
+            }
+        }
+    }
+    if (error) {
+        return;
+    }
+    if (!AStarIndex) {
+        vector<unsigned long long int> tempPath;
+        for (unsigned long long int pt = get<2>(pars[buffPoint]); pt != stPos; pt = get<2>(pars[pt])) {
+            tempPath.push_back(pt);
+        }
+        tempPath.push_back(stPos);
+        reverse(tempPath.begin(), tempPath.end());
+        for (auto pt : tempPath) {
+            longToField(pt);
+            fstPart.push_back(Field);
+        }
+    } else {
+        vector<unsigned long long int> tempPath;
+        for (unsigned long long int pt = get<2>(pars[buffPoint]); pt != finish; pt = get<2>(pars[pt])) {
+            tempPath.push_back(pt);
+        }
+        tempPath.push_back(finish);
+        for (auto pt : tempPath) {
+            longToField(pt);
+            sndPart.push_back(Field);
+        }
+    }
+}
 
-// vector<vector<unsigned short>> Multithread_2AStar(vector<unsigned short>& st) {
-//     fstPart.clear();
-//     sndPart.clear();
-//     used.clear();
-//     needToFinish = false;
-//     error = false;
-//     stPos = fieldToLong(st);
-//     finish = fieldToLong(Finish);
-//     Start = clock();
-//     calcPurposes(st);
-//     thread ModifiedAstar1(ModifiedAStar, 0);
-//     thread ModifiedAstar2(ModifiedAStar, 1);
-//     {
-//         unique_lock<mutex> lk(cvMtx);
-//         cv.wait(lk, []{ return needToFinish.load(); });
-//     }
-//     if (ModifiedAstar1.joinable()) {
-//         ModifiedAstar1.join();
-//     }
-//     if (ModifiedAstar2.joinable()) {
-//         ModifiedAstar2.join();
-//     }
-//     if (error) {
-//         return {};
-//     }
-//     vector<vector<unsigned short>> path;
-//     path.insert(path.end(), fstPart.begin(), fstPart.end());
-//     longToField(buffPoint);
-//     path.push_back(Field);
-//     path.insert(path.end(), sndPart.begin(), sndPart.end());
-//     for (auto& f: path)
-//     {
-//         print(fieldToLong(f));
-//     }
-//     print(buffPoint);
-//     return path;
-// }
+vector<vector<unsigned short>> Multithread_2AStar(vector<unsigned short>& st) {
+    fstPart.clear();
+    sndPart.clear();
+    used.clear();
+    needToFinish = false;
+    error = false;
+    stPos = fieldToLong(st);
+    finish = fieldToLong(Finish);
+    Start = clock();
+    calcPurposes(st);
+    thread ModifiedAstar1(ModifiedAStar, 0);
+    thread ModifiedAstar2(ModifiedAStar, 1);
+    {
+        unique_lock<mutex> lk(cvMtx);
+        cv.wait(lk, []{ return needToFinish.load(); });
+    }
+    if (ModifiedAstar1.joinable()) {
+        ModifiedAstar1.join();
+    }
+    if (ModifiedAstar2.joinable()) {
+        ModifiedAstar2.join();
+    }
+    if (error) {
+        return {};
+    }
+    vector<vector<unsigned short>> path;
+    path.insert(path.end(), fstPart.begin(), fstPart.end());
+    longToField(buffPoint);
+    path.push_back(Field);
+    path.insert(path.end(), sndPart.begin(), sndPart.end());
+    for (auto& f: path)
+    {
+        print(fieldToLong(f));
+    }
+    print(buffPoint);
+    return path;
+}
 unsigned long long int fifteesGenerator(int length)
 {
     unordered_set<unsigned long long int> visited;
@@ -1022,7 +1023,6 @@ int main() {
         vector<unsigned short>(16)));
     vector<function<vector<vector<unsigned short>>(vector<unsigned short>&)>> algorithms = {
         Multithread_2BFS,
-        Multithread_2AStar,
         DoubleAStar
     };
     vector<string> names = {"Multithread 2BFS", "Multithread 2A*", "2A*"};
