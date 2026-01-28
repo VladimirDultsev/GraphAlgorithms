@@ -1,0 +1,3 @@
+/Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/build/CMakeFiles/pathfinding.dir
+/Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/build/CMakeFiles/edit_cache.dir
+/Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/build/CMakeFiles/rebuild_cache.dir
