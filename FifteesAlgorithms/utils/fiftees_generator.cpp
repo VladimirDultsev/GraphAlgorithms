@@ -4,6 +4,9 @@
 #include <queue>
 #include <random>
 #include <unordered_map>
+#include <unordered_set>
+#include <cmath>
+
 #include "graph.h"
 using namespace Graph;
 
@@ -36,14 +39,33 @@ unsigned long long int fifteesGenerator(int targetDistance) {
         }
     }
     if (!statesAtTargetDistance.empty()) {
+        std::unordered_set<unsigned long long int> processed;
         std::uniform_int_distribution<unsigned long> dist(0, statesAtTargetDistance.size() - 1);
-        unsigned long long int selected = statesAtTargetDistance[dist(rng)];
-        std::vector<unsigned short> field;
-        longToField(selected, field);
-        std::vector<std::vector<unsigned short>> solutionPath = DoubleAStar(field);
-        std::cout << "Сгенерировано состояние с длиной решения: " << solutionPath.size() << '\n';
+        unsigned long long int selected;
+        for (int attempt = 0; attempt < statesAtTargetDistance.size(); ++attempt)
+        {
+            selected = statesAtTargetDistance[dist(rng)];
+            if (processed.count(selected) && attempt != 0)
+            {
+                --attempt;
+                continue;
+            }
+            std::vector<unsigned short> field;
+            longToField(selected, field);
+            std::vector<std::vector<unsigned short>> solutionPath = DoubleAStar(field);
+            if (std::abs(static_cast<int>(solutionPath.size() - targetDistance)) <= 1) break;
+            processed.insert(selected);
+        }
+        if (processed.size() == statesAtTargetDistance.size())
+        {
+            std::cout << "Не найдено состояний с длиной решения " << targetDistance << '\n';
+        }
+        else
+        {
+            std::cout << "Сгенерировано состояние с длиной решения " << targetDistance << '\n';
+        }
         return selected;
     }
-    std::cout << "Не найдено состояний с расстоянием " << targetDistance << '\n';
+    std::cout << "Не найдено состояний с длиной решения " << targetDistance << '\n';
     return finish;
 }
