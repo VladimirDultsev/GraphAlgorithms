@@ -1,9 +1,9 @@
 set(PERFTEST_SOURCES
-    misctest.cpp
-    perftest.cpp
-    platformtest.cpp
-    rapidjsontest.cpp
-    schematest.cpp)
+        misctest.cpp
+        perftest.cpp
+        platformtest.cpp
+        rapidjsontest.cpp
+        schematest.cpp)
 
 add_executable(perftest ${PERFTEST_SOURCES})
 target_link_libraries(perftest ${TEST_LIBRARIES})

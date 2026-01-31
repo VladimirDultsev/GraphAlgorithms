@@ -4,10 +4,9 @@
 #include <unordered_set>
 #include <map>
 #include <vector>
-#include <tuple>
 #include <utility>
 #include <functional>
-#include "../../rapidjson/include/rapidjson/document.h"
+#include "../rapidjson/include/rapidjson/document.h"
 
 struct pair_hash {
     template <class T1, class T2>

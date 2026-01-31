@@ -1,35 +1,35 @@
 include(CheckCXXCompilerFlag)
 
 set(UNITTEST_SOURCES
-	allocatorstest.cpp
-    bigintegertest.cpp
-    clzlltest.cpp
-	cursorstreamwrappertest.cpp
-    documenttest.cpp
-    dtoatest.cpp
-    encodedstreamtest.cpp
-    encodingstest.cpp
-    fwdtest.cpp
-    filestreamtest.cpp
-    itoatest.cpp
-    istreamwrappertest.cpp
-    jsoncheckertest.cpp
-    namespacetest.cpp
-    pointertest.cpp
-    platformtest.cpp
-    prettywritertest.cpp
-    ostreamwrappertest.cpp
-    readertest.cpp
-    regextest.cpp
-	schematest.cpp
-	simdtest.cpp
-    strfunctest.cpp
-    stringbuffertest.cpp
-    strtodtest.cpp
-    unittest.cpp
-    uritest.cpp
-    valuetest.cpp
-    writertest.cpp)
+        allocatorstest.cpp
+        bigintegertest.cpp
+        clzlltest.cpp
+        cursorstreamwrappertest.cpp
+        documenttest.cpp
+        dtoatest.cpp
+        encodedstreamtest.cpp
+        encodingstest.cpp
+        fwdtest.cpp
+        filestreamtest.cpp
+        itoatest.cpp
+        istreamwrappertest.cpp
+        jsoncheckertest.cpp
+        namespacetest.cpp
+        pointertest.cpp
+        platformtest.cpp
+        prettywritertest.cpp
+        ostreamwrappertest.cpp
+        readertest.cpp
+        regextest.cpp
+        schematest.cpp
+        simdtest.cpp
+        strfunctest.cpp
+        stringbuffertest.cpp
+        strtodtest.cpp
+        unittest.cpp
+        uritest.cpp
+        valuetest.cpp
+        writertest.cpp)
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)

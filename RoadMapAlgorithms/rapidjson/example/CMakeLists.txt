@@ -5,26 +5,26 @@ if(POLICY CMP0054)
 endif()
 
 set(EXAMPLES
-    capitalize
-    condense
-    filterkey
-    filterkeydom
-    jsonx
-    lookaheadparser
-    messagereader
-    parsebyparts
-    pretty
-    prettyauto
-    schemavalidator
-    serialize
-    simpledom
-    simplereader
-    simplepullreader
-    simplewriter
-    sortkeys
-    tutorial)
+        capitalize
+        condense
+        filterkey
+        filterkeydom
+        jsonx
+        lookaheadparser
+        messagereader
+        parsebyparts
+        pretty
+        prettyauto
+        schemavalidator
+        serialize
+        simpledom
+        simplereader
+        simplepullreader
+        simplewriter
+        sortkeys
+        tutorial)
     
-include_directories("../include/")
+include_directories("../include")
 
 add_definitions(-D__STDC_FORMAT_MACROS)
 set_property(DIRECTORY PROPERTY COMPILE_OPTIONS ${EXTRA_CXX_FLAGS})

@@ -14,7 +14,6 @@ using namespace std;
 vector<vector<unsigned short>> Purpose(2, vector<unsigned short>(16));
 map<unsigned long long int, unordered_set<unsigned long long int>> dict[2];
 unordered_map<unsigned long long int, tuple<double, unsigned long long int, unsigned long long int, bool>>pars[2];//эвристика, minDist (чистое расстояние без эвристики), родитель
-using namespace std;
 vector<bool> vars(4, false);
 vector<unsigned long long int> longs;
 vector<pair<unsigned long long int, unsigned short>> Longs;
@@ -182,7 +181,7 @@ public:
 
 bool amountOfInversions(vector<unsigned short>& f)
 {
-    unsigned int amountOfInversions = 0;//она вызывается только один раз, так что ок
+    int amountOfInversions = 0;//она вызывается только один раз, так что ок
     for (int i = 0; i < 16; i++)
     {
         for (int j = 0; j < 16 - i; j++)
@@ -266,7 +265,7 @@ void CalcVariants(unsigned long long int f, vector<unsigned long long int>& ls)
         ls.push_back(swap(f, zeroPos + 1, zeroPos));
     }
 }
-unsigned long long int fieldToLong(vector<unsigned short>& f)
+unsigned long long int fieldToLong(const vector<unsigned short>& f)
 {
     Res = 0;
     for (int i = 0; i < 16; i++)
@@ -300,7 +299,7 @@ unsigned short DoubleAStarHeuristic(unsigned long long int f)
     return cnt;
 }
 mutex HeuristicMutex;
-double DoubleAStarHeuristic2(unsigned long long int f, int ind)
+double MultithreadDoubleAStarHeuristic(unsigned long long int f, int ind)
 {
     longToField(f);
     cnt = 0;
@@ -1014,7 +1013,8 @@ int main() {
         "Multithread 2BFS",
         "A*",
         "2A*",
-        "Multithread 2A*"};
+        "Multithread 2A*"
+    };
     vector<vector<unsigned long long int>> res(algorithms.size(),
         vector<unsigned long long int>(levelsAmount));
     for (int r = 0; r < testSessionsAmount; ++r) {

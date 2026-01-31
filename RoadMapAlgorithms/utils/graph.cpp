@@ -1,6 +1,6 @@
 #include "graph.h"
 #include "distance.h"
-#include <algorithm>
+#include "../rapidjson/include/rapidjson/document.h"
 #include <iostream>
 
 namespace Graph {
@@ -65,7 +65,7 @@ namespace Graph {
     }
     
     /// Эвристическая функция для A*
-    double heuristic(unsigned long long int point, int AStarIndex){
+    double heuristic(const unsigned long long int point, const int AStarIndex){
         // В текущей версии Двухпоточный алгоритм Дейкстры и 2Дейкстра - это Двухпоточный A* и 2A*, но эвристическая функция возвращает 0
 
         if(start == 0 && finish == 0) return 0; // Защита от неинициализированных точек
@@ -82,13 +82,13 @@ namespace Graph {
     }
     
     /// Установка стартовой и конечной точек
-    void setStartFinish(unsigned long long int s, unsigned long long int f){
+    void setStartFinish(const unsigned long long int s, const unsigned long long int f){
         start = s;
         finish = f;
     }
     
     /// Функция, определяющая суммарную длину пути
-    double getLength(std::vector<unsigned long long int>& path){
+    double getLength(const std::vector<unsigned long long int>& path){
         double sum = 0;
         for(int i = 1; i < path.size(); ++i){
             sum += Distance::calcGPSDistance(

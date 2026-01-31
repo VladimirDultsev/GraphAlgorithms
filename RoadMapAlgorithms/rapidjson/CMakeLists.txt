@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
+SET(CMAKE_MODULE_PATH CMakeModules)
 
 set(LIB_MAJOR_VERSION "1")
 set(LIB_MINOR_VERSION "1")
@@ -155,7 +155,7 @@ ELSEIF(WIN32)
 ENDIF()
 SET(CMAKE_INSTALL_DIR "${_CMAKE_INSTALL_DIR}" CACHE PATH "The directory cmake files are installed in")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(include)
 
 if(RAPIDJSON_BUILD_DOC)
     add_subdirectory(doc)
@@ -163,7 +163,7 @@ endif()
 
 add_custom_target(travis_doc)
 add_custom_command(TARGET travis_doc
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/travis-doxygen.sh)
+    COMMAND travis-doxygen.sh)
 
 if(RAPIDJSON_BUILD_EXAMPLES)
     add_subdirectory(example)
@@ -201,7 +201,7 @@ install(DIRECTORY include/rapidjson
     DESTINATION "${INCLUDE_INSTALL_DIR}"
     COMPONENT dev)
 
-install(DIRECTORY example/
+install(DIRECTORY example
     DESTINATION "${DOC_INSTALL_DIR}/examples"
     COMPONENT examples
     # Following patterns are for excluding the intermediate/object files
@@ -219,7 +219,7 @@ EXPORT( PACKAGE ${PROJECT_NAME} )
 
 # Create the RapidJSONConfig.cmake file for other cmake projects.
 # ... for the build tree
-SET( CONFIG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+SET( CONFIG_SOURCE_DIR .)
 SET( CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR})
 SET( ${PROJECT_NAME}_INCLUDE_DIR "\${${PROJECT_NAME}_SOURCE_DIR}/include" )
 

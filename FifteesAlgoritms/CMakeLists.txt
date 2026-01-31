@@ -3,20 +3,21 @@ project(pathfinding)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(rapidjson/include)
-
 set(SOURCES
         main.cpp
-        utils/distance.cpp
+        utils/fiftees_generator.cpp
         utils/graph.cpp
+        utils/heuristics.cpp
+        algorithms/bfs.cpp
+        algorithms/bidirectional_bfs.cpp
+        algorithms/multithread_bidirectional_bfs.cpp
         algorithms/astar.cpp
-        algorithms/dijkstra.cpp
         algorithms/bidirectional_astar.cpp
         algorithms/multithread_bidirectional_astar.cpp
         test_system.cpp
 )
 
-add_executable(pathfinding ${SOURCES})
+add_executable(fifteesSolver ${SOURCES})
 
 find_package(Threads REQUIRED)
-target_link_libraries(pathfinding Threads::Threads)
+target_link_libraries(fifteesSolver Threads::Threads)

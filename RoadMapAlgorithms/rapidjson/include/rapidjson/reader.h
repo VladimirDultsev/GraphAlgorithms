@@ -123,7 +123,7 @@ RAPIDJSON_DIAG_OFF(effc++)
     RAPIDJSON_MULTILINEMACRO_END
 #endif
 
-#include "error/error.h" // ParseErrorCode, ParseResult
+#include "error/error.h"
 
 RAPIDJSON_NAMESPACE_BEGIN
 

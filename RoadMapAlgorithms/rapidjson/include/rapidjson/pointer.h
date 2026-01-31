@@ -18,7 +18,7 @@
 #include "document.h"
 #include "uri.h"
 #include "internal/itoa.h"
-#include "error/error.h" // PointerParseErrorCode
+#include "error/error.h"
 
 #ifdef __clang__
 RAPIDJSON_DIAG_PUSH

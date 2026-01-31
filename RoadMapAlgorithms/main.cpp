@@ -5,8 +5,8 @@
 #include "algorithms/multithread_bidirectional_astar.h"
 #include "utils/graph.h"
 #include "test_system.h"
-#include "../rapidjson/include/rapidjson/document.h"
-#include "../rapidjson/include/rapidjson/istreamwrapper.h"
+#include "rapidjson/include/rapidjson/document.h"
+#include "rapidjson/include/rapidjson/istreamwrapper.h"
 #include <fstream>
 
 int main()

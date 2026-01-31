@@ -19,7 +19,7 @@
 #ifndef RAPIDJSON_DTOA_
 #define RAPIDJSON_DTOA_
 
-#include "itoa.h" // GetDigitsLut()
+#include "itoa.h"
 #include "diyfp.h"
 #include "ieee754.h"
 
