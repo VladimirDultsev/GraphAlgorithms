@@ -11,7 +11,7 @@
 
 int main()
 {
-    std::ifstream file("../../Graphs/moscow_roads.geojson");
+    std::ifstream file("../Graphs/moscow_roads.geojson");
     rapidjson::IStreamWrapper isw(file);
     rapidjson::Document doc;
     doc.ParseStream(isw);

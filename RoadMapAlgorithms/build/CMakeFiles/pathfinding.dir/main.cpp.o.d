@@ -801,10 +801,10 @@ CMakeFiles/pathfinding.dir/main.cpp.o: \
   /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/algorithms/bidirectional_astar.h \
   /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/algorithms/multithread_bidirectional_astar.h \
   /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/graph.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/document.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/reader.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/allocators.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/rapidjson.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/document.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/reader.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/allocators.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/rapidjson.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/inttypes.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/17/include/inttypes.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/inttypes.h \
@@ -814,29 +814,29 @@ CMakeFiles/pathfinding.dir/main.cpp.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/assert.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/_assert.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/_static_assert.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/meta.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/../rapidjson.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/stream.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/encodings.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/encodedstream.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/memorystream.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/clzll.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/stack.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/../allocators.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/swap.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/strtod.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/ieee754.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/biginteger.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/diyfp.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/pow10.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/error/error.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/error/../rapidjson.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/strfunc.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../../rapidjson/include/rapidjson/internal/../stream.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/meta.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/../rapidjson.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/stream.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/encodings.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/encodedstream.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/memorystream.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/clzll.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/stack.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/../allocators.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/swap.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/strtod.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/ieee754.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/biginteger.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/diyfp.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/pow10.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/error/error.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/error/../rapidjson.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/strfunc.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/utils/../rapidjson/include/rapidjson/internal/../stream.h \
   /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/test_system.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/../rapidjson/include/rapidjson/document.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/../rapidjson/include/rapidjson/istreamwrapper.h \
-  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/../rapidjson/include/rapidjson/stream.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/rapidjson/include/rapidjson/document.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/rapidjson/include/rapidjson/istreamwrapper.h \
+  /Users/vladimir/CLionProject/GraphAlgorithms/RoadMapAlgorithms/rapidjson/include/rapidjson/stream.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/fstream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/filesystem \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/usr/include/c++/v1/__filesystem/copy_options.h \
