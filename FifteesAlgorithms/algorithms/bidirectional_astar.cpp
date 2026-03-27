@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <unordered_set>
+#include<algorithm>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -104,7 +105,7 @@ std::vector<std::vector<unsigned short>> DoubleAStar(std::vector<unsigned short>
         longToField(i, pt);
         lst.push_back(pt);
     }
-    reverse(lst.begin(), lst.end());
+    std::reverse(lst.begin(), lst.end());
     for(unsigned long long int i = std::get<2>(pars[1][point]); i != finish; i = std::get<2>(pars[1][i]))
     {
         longToField(i, pt);

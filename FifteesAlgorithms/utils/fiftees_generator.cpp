@@ -58,14 +58,14 @@ unsigned long long int fifteesGenerator(int targetDistance) {
         }
         if (processed.size() == statesAtTargetDistance.size())
         {
-            std::cout << "Не найдено состояний с длиной решения " << targetDistance << '\n';
+            std::cout << "States on distance " << targetDistance << " not found" << '\n';
         }
         else
         {
-            std::cout << "Сгенерировано состояние с длиной решения " << targetDistance << '\n';
+            std::cout << "Generated state with solving length: " << targetDistance << '\n';
         }
         return selected;
     }
-    std::cout << "Не найдено состояний с длиной решения " << targetDistance << '\n';
+    std::cout << "States on distance " << targetDistance << " not found" << '\n';
     return finish;
 }

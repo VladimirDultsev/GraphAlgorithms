@@ -1,5 +1,12 @@
 #include "multithread_bidirectional_astar.h"
-
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <tuple>
+#include <unordered_map>
 #include <iostream>
 #include <map>
 #include <unordered_map>
@@ -129,7 +136,7 @@ std::vector<std::vector<unsigned short>> Multithread_2AStar(std::vector<unsigned
     std::thread ModifiedAstar2(ModifiedAStar, 1);
     {
         std::unique_lock<std::mutex> lk(cvMtx);
-        cv.wait(lk, []{ return needToFinish.load(); });
+        cv.wait(lk, [&]{ return needToFinish.load(); });
     }
     if (ModifiedAstar1.joinable()) {
         ModifiedAstar1.join();

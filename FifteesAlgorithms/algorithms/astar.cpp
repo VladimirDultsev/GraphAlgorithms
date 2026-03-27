@@ -3,6 +3,7 @@
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
+#include <algorithm>
 #include <utility>
 #include <vector>
 #include "../utils/heuristics.h"
@@ -82,6 +83,6 @@ std::vector<std::vector<unsigned short>> AStar(const std::vector<unsigned short>
     longToField(start, pt);
     lst.push_back(pt);
     // Переворачиваем путь,ттак как мы шли в обратном порядке
-    reverse(lst.begin(), lst.end());
+    std::reverse(lst.begin(), lst.end());
     return lst;
 }

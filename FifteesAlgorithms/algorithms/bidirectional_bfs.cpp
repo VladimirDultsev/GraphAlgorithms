@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_map>
 #include <utility>
+#include <algorithm>
 #include "../utils/graph.h"
 
 using namespace Graph;
@@ -57,7 +58,7 @@ std::vector<std::vector<unsigned short>> DoubleBFS(const std::vector<unsigned sh
         longToField(point, pt);
         lst.push_back(pt);
     }
-    reverse(lst.begin(), lst.end());
+    std::reverse(lst.begin(), lst.end());
     for(unsigned long long int point = std::get<2>(pars[1][curr]); point != 0; point = std::get<2>(pars[1][point])) {
         longToField(point, pt);
         lst.push_back(pt);

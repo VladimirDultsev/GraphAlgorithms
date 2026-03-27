@@ -4,6 +4,13 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <queue>
+#include <algorithm>
+#include <vector>
+#include <tuple>
 #include "../utils/graph.h"
 using namespace Graph;
 
@@ -103,7 +110,7 @@ std::vector<std::vector<unsigned short>> Multithread_2BFS(std::vector<unsigned s
     std::thread ModifiedBFS2(ModifiedBFS, 1);
     {
         std::unique_lock<std::mutex> lk(cvMtx);
-        cv.wait(lk, []{ return needToFinish.load(); });
+        cv.wait(lk, [&]{ return needToFinish.load(); });
     }
 
     if(ModifiedBFS1.joinable()){

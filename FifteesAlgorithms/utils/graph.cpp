@@ -1,7 +1,6 @@
 #include "graph.h"
 #include <iostream>
 #include <vector>
-#include <__ostream/basic_ostream.h>
 
 namespace Graph
 {
